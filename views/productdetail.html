@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <!-- Icon Material Design -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <title>Hai Pasar</title>
+  <style>
+    .divitems {
+      width: 50%;
+      display: flex;
+    }
+
+    .gridcontainer {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-content: center;
+    }
+
+    .girditems {
+      flex-grow: 1;
+      flex-shrink: 2;
+      margin: 5px;
+      flex-basis: 196px;
+      max-width: 220px;
+    }
+
+    .cursorgrab {
+      cursor: pointer;
+    }
+
+    .divcart {
+      position: absolute;
+      width: 100%;
+    }
+
+    .divcartbg {
+      z-index: 2000;
+      bottom: 0;
+      height: 70px;
+      border-style: solid;
+      border-top-color: green;
+      border-width: 0.3px;
+      border-left: 0;
+      border-right: 0;
+      background-color: white;
+      width: inherit;
+      position: fixed;
+      padding: 20px;
+    }
+
+    .dekstopnone {
+      display: none;
+    }
+
+    .mobilenone {
+      display: block;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .girditems {
+        flex-grow: 1;
+        flex-shrink: 2;
+        margin: 5px;
+        max-width: 47%;
+      }
+
+      .divitems {
+        width: 100%;
+      }
+
+      .dekstopnone {
+        display: block;
+      }
+
+      .mobilenone {
+        display: none;
+      }
+    }
+
+    /* #################################### */
+    .containerscroll {
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+
+    .itemscroll {
+      flex-grow: 1;
+      flex-shrink: 2;
+      min-width: 163px;
+      max-width: 190px;
+      height: 161;
+
+      margin-right: 10px;
+    }
+
+    .containerlist {
+      justify-content: center;
+      display: grid;
+      grid-column-gap: 10px;
+      grid-row-gap: 15px;
+    }
+
+    .divscroll {
+      justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(1, calc(163px * 6 + (10px * 6)) [col-start]);
+    }
+
+    /* Extra small devices (phones, 600px and down) */
+    @media only screen and (max-width: 600px) {
+      .containerlist {
+        grid-template-columns: repeat(2, 163px [col-start]);
+      }
+
+      .divscroll {
+        grid-template-columns: repeat(1, calc(163px * 2 + (10px * 2)) [col-start]);
+      }
+
+      .containerscroll {
+        overflow: scroll;
+      }
+    }
+
+    /* Small devices (portrait tablets and large phones, 600px and up) */
+    @media only screen and (min-width: 600px) {
+      .containerlist {
+        grid-template-columns: repeat(3, 163px [col-start]);
+      }
+
+      .divscroll {
+        grid-template-columns: repeat(1, calc(163px * 3 + (10px * 3)) [col-start]);
+      }
+
+      .containerscroll {
+        overflow: scroll;
+      }
+    }
+
+    /* Medium devices (landscape tablets, 768px and up) */
+    @media only screen and (min-width: 768px) {
+      .containerlist {
+        grid-template-columns: repeat(4, 163px [col-start]);
+      }
+
+      .divscroll {
+        grid-template-columns: repeat(1, calc(163px * 4 + (10px * 4)) [col-start]);
+      }
+
+      .containerscroll {
+        overflow: hidden;
+      }
+    }
+
+    /* Large devices (laptops/desktops, 992px and up) */
+    @media only screen and (min-width: 992px) {
+      .containerlist {
+        grid-template-columns: repeat(5, 163px [col-start]);
+      }
+
+      .divscroll {
+        grid-template-columns: repeat(1, calc(163px * 5 + (10px * 5)) [col-start]);
+      }
+
+      .containerscroll {
+        overflow: hidden;
+      }
+    }
+
+    /* Extra large devices (large laptops and desktops, 1200px and up) */
+    @media only screen and (min-width: 1200px) {
+      .containerlist {
+        grid-template-columns: repeat(6, 163px [col-start]);
+      }
+
+      .divscroll {
+        grid-template-columns: repeat(1, calc(163px * 6 + (10px * 6)) [col-start]);
+      }
+    }
+  </style>
+</head>
+
+<body style="background-color: #fafafa">
+
+  <!-- sidebar -->
+  <%- include('_sidebar_main.html'); -%>
+  <div id="bodymain">
+
+    <!-- main cart -->
+    <div class="divcart dekstopnone">
+      <div class="divcartbg">
+        <div style="display: flex;justify-content: space-between;align-items: center;">
+          <div style="width: 100%;">
+            <div style="position: relative;">
+              <div class="input-group" style="padding-right: 30px;">
+                <div class="input-group-prepend">
+                  <button class="btn btn-success" type="button" onclick="CartMinus();"><i class="material-icons"
+                      style="font-size: 12px;text-align: center;">
+                      remove
+                    </i></button>
+                </div>
+                <input id="edtQty" type="number" class="form-control" placeholder="" value="1" min="1"
+                  style="text-align: center;">
+                <div class="input-group-append">
+                  <button class="btn btn-success" type="button" onclick="CartAdd();"><i class="material-icons"
+                      style="font-size: 12px;">
+                      add
+                    </i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="width: 100%;">
+            <button class="btn btn-success btn-block" onclick="AddItemCart('<%=data[0].ID%>');">Tambah</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- main detail -->
+    <div class="divscroll">
+      <div style="display: flex;flex-wrap: wrap; justify-content: center;margin-top:20px;">
+        <div class="divitems" style="justify-content:center;">
+          <div class="card" style="max-width: 300px;">
+            <img src="<%=data[0].ImageUrl%>" onerror="this.src='/tempnotfound.png'" class="rounded"
+              style="width: 100%;max-height: 350px;">
+          </div>
+        </div>
+        <div class="divitems" style="display: flex;align-items: center;">
+          <div style="padding: 10px;">
+            <br>
+            <h1 style="color: green"><%=data[0].NameProduct%></h1>
+            <h2>Rp.<%=data[0].Price%> / <%=data[0].Unit%></h2>
+            <b style="padding-bottom: 10px;color: green;">Kategori : <% if(data[0].namecategory==null){%> - <%}else{%>
+              <%=data[0].namecategory%> <%}%> </b>
+          <div class="mobilenone">
+              <hr>
+              <div style="display: flex;">
+                  <div style="display: flex;justify-content:center;align-items: center">
+                    <h4>Jumlah</h4>
+                    <input id="edtQty" class="form-control" min="1"
+                      style="margin-left:5px; width:80px;text-align: center;margin-left: 10px" type="number" value="1">
+        
+                    <button class="btn btn-success ml-2" style="min-width: 100px"
+                      onclick="AddItemCart('<%=data[0].ID%>');"> <div style="text-align: center;"><i
+                  class="material-icons mr-1" style="font-size: 13px;text-align: center;">shopping_cart</i>Beli</div>
+              </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+  <br>
+  <!-- main list -->
+  <div class="divscroll">
+    <h5 style="margin-left: 5px;margin-right: 5px;margin-top: 10px;margin-bottom: 5px;">Produk Rekomendasi</h5>
+  </div>
+  <div data-aos="" style="padding: 5px;margin-bottom: 15px;">
+    <div data-aos="fade-up" class="containerlist">
+      <% for(let i = 0;i < dataProduct.length;i++) {  %>
+      <div class="itemlist">
+        <div data-aos="fade-up" class="card cursorgrab" style="width: 100%;height: 100%;">
+          <img src="<%=dataProduct[i].ImageUrl%>" onerror="this.src='/tempnotfound.png'"
+            style="height: 100px;width: auto;margin: 2px;" onclick="location.href='/product/<%=dataProduct[i].ID%>'">
+          <div class="card-body"
+            style="padding: 4px 15px 9px 15px;display:flex;flex-direction: column; justify-content:flex-end;"
+            onclick="location.href='/product/<%=dataProduct[i].ID%>'">
+            <div style="font-size: 12px;text-align: right; color: grey;">
+              <% if(dataProduct[i].isShowStock==1){ %>tersedia
+              <%=dataProduct[i].Stock%> <%=dataProduct[i].Unit%> <% } %></div>
+            <h6 style="color: green;margin-bottom: 5px;"><%=dataProduct[i].NameProduct%></h6>
+            <b>Rp.<%=dataProduct[i].Price%> / <%=dataProduct[i].Unit%></b>
+          </div>
+        </div>
+      </div>
+      <% }%>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <!-- <nav class="navbar bg-success" style="margin-top: 10px;">
+      <h6 style="color: white;margin:5px;">Copyright Haipasar</h6>
+    </nav> -->
+
+
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script src="/dialog.js"></script>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true });
+
+    function AddItemCart(iddata) {
+      var qtyUnit = document.getElementById('edtQty').value;
+      $.ajax({
+        type: "get",
+        url: "/cartadd/" + iddata + "/" + qtyUnit,
+        data: "",
+        success: function (response) {
+          if (response == 'true') {
+            var r = confirmshow('Produk telah ditambahkan ke daftar keranjang. Lanjutkan proses pemesanan?', function () {
+              location.href = '/cart'
+            })
+          } else {
+            alertshow(response, function () {
+              location.reload();
+            });
+          }
+        }
+      });
+    }
+
+    function CartAdd() {
+      location.href = '#'
+      document.getElementById('edtQty').value = parseInt(document.getElementById('edtQty').value) + 1;
+    }
+
+    function CartMinus() {
+      location.href = '#'
+      var qty = parseInt(document.getElementById('edtQty').value)
+      if (qty - 1 > 0)
+        document.getElementById('edtQty').value = parseInt(document.getElementById('edtQty').value) - 1;
+    }
+  </script>
+
+  <script src="/modul.js"></script>
+</body>
+
+</html>

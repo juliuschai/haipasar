@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- Material Design -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        .shadow {
+            box-shadow: 1px, 1px, 5px, black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card mb-4 shadow">
+        <div class="card-body">
+            <h5 style="">Data Diri</h5>
+            <hr>
+            <div style="">
+                <label for="" style="margin-bottom: 5px;">Nama</label>
+                <input type="text" class="form-control" id="edtDisplayName" value="<%=dataAccount[0].DisplayName%>">
+                <label for="" style="margin-bottom: 5px;margin-top: 5px;">Email</label>
+                <input type="text" class="form-control" id="edtEmail" value="<%=dataAccount[0].Email%>" disabled>
+                <label for="" style="margin-bottom: 5px;margin-top: 5px">Nomor HP</label>
+                <input type="text" class="form-control" id="edtNoHP" value="<%=dataAccount[0].Phone%>">
+                <label for="" style="margin-bottom: 5px;margin-top: 5px">Kota/Kecamatan</label>
+                <input type="text" class="form-control" id="edtCity" value="<%=dataAccount[0].City%>">
+                <label for="" style="margin-bottom: 5px;margin-top: 5px">Alamat</label>
+                <textarea rows="5" class="form-control" id="edtAddress"><%=dataAccount[0].Address%></textarea>
+                <label for="" style="margin-bottom: 5px;margin-top: 5px">Kode Pos</label>
+                <input type="text" class="form-control" id="edtCodePos" value="<%=dataAccount[0].CodePos%>">
+                <br>
+                <div style="text-align: right;">
+                    <button class="btn btn-success" onclick="SaveData();">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var ctdata = '<%-ctdata%>';
+
+        function SaveData() {
+            var dataTmp = {
+                "displayname": document.getElementById('edtDisplayName').value,
+                "telp": document.getElementById('edtNoHP').value,
+                "city": document.getElementById('edtCity').value,
+                "address": document.getElementById('edtAddress').value,
+                "codepos": document.getElementById('edtCodePos').value
+            }
+            $.ajax({
+                type: "post",
+                url: "/profilesave",
+                data: dataTmp,
+                success: function (response) {
+                    if (response == 'true') {
+                        alertshow('Data Berhasil Disimpan',function(){
+                            location.reload();
+                        });
+                    } else {
+                        alertshow(response,function(){
+                            location.reload();
+                        });
+                    }
+                }
+            });
+        }
+
+
+    </script>
+</body>
+
+</html>

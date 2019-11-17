@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <title>Hai Pasar</title>
+    <style>
+        .hrdivider {
+            height: 0px;
+            margin: 1px;
+            overflow: hidden;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .shadow {
+            box-shadow: 1px, 1px, 5px, black;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- AlertDialog -->
+    <div class="modal fade" id="DialogAlert" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-body">
+                <br>
+                <div id="DialogAlertContent"></div>
+                <hr>
+                <div style="text-align: right;">
+                <button id="DialogAlertButton" type="button" class="btn btn-success" data-dismiss="modal">Oke</button>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <a class="navbar-brand" href="/"><b>Haipasar</b></a>
+    </nav>
+    <div class="container" style=margin-top:20px;>
+        <div style="display: flex;justify-content: center;align-items: center;">
+            <div class="col-md-7" style="padding: 0px;">
+
+                <div class="card mb-4 shadow">
+                    <div class="card-body">
+                        <h3 style="">Formulir Pendaftaran Mitra Driver</h3>
+                        <div class="hrdivider"></div>
+                        <div style="">
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">No Identitas (KTP/SIM)</label>
+                            <input type="text" class="form-control" id="edtNoID" value="">
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Name Lengkap</label>
+                            <input type="text" class="form-control" id="edtName" value="">
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Tempat Lahir</label>
+                            <input type="text" class="form-control" id="edtPlaceofbirth" value="">
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Tanggal Lahir</label>
+                            <input type="date" class="form-control" id="edtPlaceofdate" value="">
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Jenis Kelamin</label>
+                            <select class="form-control form-control" id="edtGender">
+                                <option value="PRIA">Laki - laki</option>
+                                <option value="WANITA">Perempuan</option>
+                            </select>
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Alamat</label>
+                            <textarea rows="5" class="form-control" id="edtAddress"></textarea>
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Kota</label>
+                            <input type="text" class="form-control" id="edtCity" value="">
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Email</label>
+                            <input type="text" class="form-control" id="edtEmail" value="">
+                            <br>
+                            <h6>* Formulir ini akan otomatis di konversi kedalam pesan whatsapp</h6>
+                            <br>
+                            <div style="text-align: right;">
+                                <button class="btn btn-secondary mr-1" onclick="location.href='/'">Batalkan</button>
+                                <button class="btn btn-success" onclick="Register();">Kirim Formulir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="/dialog.js"></script>
+  
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true });
+
+        var today = new Date();
+        document.getElementById("edtPlaceofdate").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+
+        var csnumber = '<%=csnumber%>';
+        function Register() {
+            var e = document.getElementById("edtGender");
+            var strGender = e.options[e.selectedIndex].value;
+            var snoid = document.getElementById('edtNoID').value.toUpperCase();
+            var sname = document.getElementById('edtName').value.toUpperCase();
+            var splacebirth = document.getElementById('edtPlaceofbirth').value.toUpperCase();
+            var sdatebirth = document.getElementById('edtPlaceofdate').value.toUpperCase();
+            var sgender = strGender;
+            var scity = document.getElementById('edtCity').value.toUpperCase();
+            var saddress = document.getElementById('edtAddress').value.toUpperCase();
+            var semail = document.getElementById('edtEmail').value;
+            if ((snoid == '') || (sname == '') || (splacebirth == '') || (scity == '') || (saddress == '') || (semail == '')) {
+                alertshow('Mohon isi data dengan lengkap !',null);
+            } else {
+                var url = 'https://wa.me/' + csnumber + '?text=MITRADRIVER' + '/' + snoid + '/' + sname + '/' + splacebirth + '/' + sdatebirth + '/' + sgender + '/' + saddress + '/' + scity + '/' + semail;
+                location.href = url;
+            }
+        }
+    </script>
+</body>
+
+</html>

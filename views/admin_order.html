@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head></head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-3 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>Filter Invoice</h5>
+                        <hr>
+                        <label for="">Tanggal Invoice</label>
+                        <input id="edtDate" type="date" class="form-control mb-1">
+                        <input id="edtisAllDate" type="checkbox" class="mb-2 mr-1" onchange="DisableInput('date')">Semua periode <br>
+                        <label for="">Nomor Invoice</label>
+                        <input id="edtInvoice" type="text" class="form-control mb-1" placeholder="Nomor invoice">
+                        <label for="">Status Pembayaran</label>
+                        <select class="form-control mb-1" id="edtSTatusPayment">
+                            <option value="all">Semua tipe pembayaran</option>
+                            <option value="notyet">Belum dibayar</option>
+                            <option value="waiting">Menunggu konfirmasi</option>
+                            <option value="success">Sudah dibayar</option>
+                            <option value="reject">Pembayaran ditolak</option>
+                        </select>
+                        <label for="">Status Transaksi</label>
+                        <select class="form-control mb-2" id="edtStatusTrans">
+                            <option value="all">Semua tipe transaksi</option>
+                            <option value="open">Pemesanan Baru</option>
+                            <option value="processed">Sedang Diproses</option>
+                            <option value="awaiting">Sedang Ditunda</option>
+                            <option value="complete">Selesai</option>
+                            <option value="canceled">Dibatalkan</option>
+                        </select>
+                        <button class="btn btn-secondary btn-block" onclick="PreviewData();">Preview</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 mb-4" id="mainlist">
+                <div class="alert alert-success" role="alert" style="margin-top: 15px;">
+                    Tekan tombol preview untuk menampilkan data
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var today = new Date();
+        document.getElementById("edtDate").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+
+        function PreviewData(params) {
+            var sdatetemp = document.getElementById('edtDate').valueAsDate;
+            var sdate = sdatetemp.getFullYear() + '-' + ('0' + (sdatetemp.getMonth() + 1)).slice(-2) + '-' + ('0' + sdatetemp.getDate()).slice(-2)
+            var sinvoice = document.getElementById('edtInvoice').value;
+            var sstatuspayment = document.getElementById('edtSTatusPayment').value;
+            var sstatustrans = document.getElementById('edtStatusTrans').value;
+            var sisalldate = document.getElementById('edtisAllDate').checked;
+            var param = 'tanggal=' + sdate + '&invoice=' + sinvoice + '&statuspayment=' + sstatuspayment + '&statustrans=' + sstatustrans+'&isalldate=' + sisalldate
+            $("#mainlist").load("/adminorder_list", param);
+        }
+        function DisableInput(smode){
+            if(smode=='date'){
+                var flagstatus = document.getElementById('edtisAllDate').checked;
+                document.getElementById('edtDate').disabled  = flagstatus
+            }
+        }
+    </script>
+</body>
+
+</html>

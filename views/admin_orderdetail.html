@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Icon Material Design -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Hai Pasar</title>
+    <style>
+        .hrdivider {
+            height: 0px;
+            margin: 1px;
+            overflow: hidden;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .shadow {
+            box-shadow: 1px, 1px, 5px, black;
+        }
+
+        .griditem {
+            margin-top: 10px;
+            ;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .cursorgrab {
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+    <%- include('_sidebar_admin.html'); -%>
+    <div class="container" style="margin-top: 20px;">
+        <% if(dataDocument.length==0){ %>
+        <div class="alert alert-danger">Data transaksi tidak ditemukan</div>
+        <% }else{ %>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="divinfo" class="card mb-4 shadow">
+                    <div class="card-body">
+                        <h5 style="">Detail Pesanan</h5>
+                        <hr>
+                        <div class="griddata">
+                            <div class="row rowdata mb-2">
+                                <div class="col-sm-4">Tanggal Invoice</div>
+                                <div class="col-sm-8"><b><%=dataDocument[0].TimeCreated1%></b></div>
+                            </div>
+                            <div class="row rowdata  mb-2">
+                                <div class="col-sm-4">Nomor Invoice</div>
+                                <div class="col-sm-8"><b>#<%=dataDocument[0].DocNumber%></b></div>
+                            </div>
+                            <div class="row rowdata  mb-2">
+                                <div class="col-sm-4">Nama Penerima</div>
+                                <div class="col-sm-8"><b><%=dataDocument[0].ShippingRecipient%></b></div>
+                            </div>
+                            <div class="row rowdata  mb-2">
+                                <div class="col-sm-4">Email</div>
+                                <div class="col-sm-8"><b><%=dataDocument[0].ShippingEmail%></b></div>
+                            </div>
+                            <div class="row rowdata  mb-2">
+                                <div class="col-sm-4">Nomor HP</div>
+                                <div class="col-sm-8"><b><%=dataDocument[0].ShippingPhone%></b></div>
+                            </div>
+                            <div class="row rowdata  mb-2">
+                                <div class="col-sm-4">Kota</div>
+                                <div class="col-sm-8"><b><%=dataDocument[0].ShippingCity%></b></div>
+                            </div>
+                            <div class="row rowdata  mb-2">
+                                <div class="col-sm-4">Alamat</div>
+                                <div class="col-sm-8"><b><%=dataDocument[0].ShippingAddress%></b></div>
+                            </div>
+                            <div class="row rowdata  mb-2">
+                                <div class="col-sm-4">Kode Pos</div>
+                                <div class="col-sm-8"><b><%=dataDocument[0].ShippingCodePos%></b></div>
+                            </div>
+                            <div class="row rowdata  mb-2">
+                                <div class="col-sm-4">Total Biaya</div>
+                                <div class="col-sm-8"><b>Rp. <%=dataDocument[0].GrandTotal%></b></div>
+                            </div>
+                            <div class="row rowdata  mb-2">
+                                <div class="col-sm-4">Status Tranasksi</div>
+                                <div class="col-sm-8">
+                                   <b> <% if(dataDocument[0].Status=='open'){%> Belum dikonfirmasi
+                                    <% } else if(dataDocument[0].Status=='processed'){ %> Sedang diproses
+                                    <% } else if(dataDocument[0].Status=='awaiting'){ %> Menunggu konfirmasi
+                                    <% } else if(dataDocument[0].Status=='complete'){ %> Berhasil
+                                    <% } else if(dataDocument[0].Status=='canceled'){ %> Dibatalkan
+                                    <% }; %></b>
+                                </div>
+                            </div>
+                            <div class="row rowdata  mb-2">
+                                <div class="col-sm-4">Status Pembayaran</div>
+                                <div class="col-sm-8">
+                                   <b> <% if(dataDocument[0].StatusPayment=='notyet'){%> Belum melakukan
+                                    <% } else if(dataDocument[0].StatusPayment=='waiting'){ %> Menunggu konfirmasi
+                                    <% } else if(dataDocument[0].StatusPayment=='success'){ %> Berhasil
+                                    <% } else if(dataDocument[0].StatusPayment=='reject'){ %> Ditolak
+                                    <% }; %></b>
+                                </div>
+                            </div>
+                            <hr>
+                            <textarea rows="5" class="form-control" id="edtNotes" placeholder="Catatan Pemesanan"
+                                readonly><%=dataDocument[0].Notes%></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div id="divpesanan" class="card mb-4 shadow">
+                    <div class="card-body">
+                        <h5 style="">Daftar Pesanan</h5>
+                        <hr>
+                        <div class="griddata">
+                            <%  if (dataOrderItem.length==0) { %>
+                            <div class="alert alert-primary" role="alert" style="margin-top: 15px;">
+                                Tidak ada barang pesanan
+                            </div>
+                            <div class="hrdivider"></div>
+                            <% } else { %>
+                            <% for(let i = 0;i < dataOrderItem.length;i++) {  %>
+                            <div class="griditem">
+                                <img src="<%=dataOrderItem[i].ImageUrl%>" alt="" style="width:80px;margin-right: 15px;">
+                                <div style="width: 100%;">
+                                    <b><%=dataOrderItem[i].NameProduct%></b>
+                                    <div style="font-size: 12px;">Harga Rp. <%=dataOrderItem[i].Price%></div>
+                                    <div style="font-size: 12px;">Jumlah
+                                        <%=dataOrderItem[i].Qty%>/<%=dataOrderItem[i].Unit%></div>
+                                    <div><b>Total Rp. <%=dataOrderItem[i].Total%></b></div>
+                                </div>
+                            </div>
+                            <hr>
+                            <% } %>
+                            <% } %>
+                            <b style="margin-top: 15px;font-size: 1.2rem;">Total Pemesanan : Rp.
+                                <%=dataDocument[0].GrandTotal%></b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="divpembayaran" class="card mb-4 shadow">
+                    <div class="card-body">
+                        <h5 style="">Informasi Pembayaran</h5>
+                        <hr>
+                        <% if(dataDocument[0].StatusPayment=='notyet'){ %>
+                        <div class="alert alert-danger">Belum melakukan pembayaran</div>
+                        <% }else{ %>
+                        <div>
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Nama Bank</label>
+                            <input type="text" class="form-control" value="<%=dataDocument[0].ShippingPaymentBank%>"
+                                disabled>
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Nama Pemilik Rekening</label>
+                            <input type="text" class="form-control" value="<%=dataDocument[0].ShippingPaymentPerson%>"
+                                placeholder="" disabled>
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Nomor Rekening</label>
+                            <input type="text" class="form-control" value="<%=dataDocument[0].ShippingPaymentNumber%>"
+                                placeholder="" disabled>
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Nominal</label>
+                            <input type="text" class="form-control" value="<%=dataDocument[0].ShippingAmount%>"
+                                placeholder="" disabled>
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Bukti Pembayaran</label><br>
+                            <img src="/<%=dataDocument[0].PaymentProof%>" class="img-thumbnail cursorgrab"
+                                style="width: 100px;height: 100px;" onerror="this.src='/tempnotfound.png'"
+                                onclick="ShowImagePayment('<%=dataDocument[0].PaymentProof%>');">
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+                <div id="divhistory" class="card mb-4 shadow">
+                    <div class="card-body">
+                        <h5>Histori</h5>
+                        <hr>
+                        <% if(dataHistory.length==0){ %>
+                        <div class="alert alert-primary">Tidak ada data</div>
+                        <% }else{ %>
+                        <% for(let i = 0;i < dataHistory.length;i++) {  %>
+                        <div class="row rowdata">
+                            <div class="col-sm-4"><%=dataHistory[i].TimeCreated1%></div>
+                            <div class="col-sm-8"><b><%=dataHistory[i].Notes%></b></div>
+                        </div>
+                        <hr>
+                        <% }%>
+                        <% } %>
+                    </div>
+                </div>
+                <div id="divmanagementtransaction" class="card mb-4 shadow">
+                    <div class="card-body">
+                        <h5>Management Transaksi</h5>
+                        <hr>
+                        <div>
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Status Pembayaran</label>
+                            <select class="form-control" id="edtStatusPayment">
+                                <% if(dataDocument[0].StatusPayment=='notyet'){%>selected<% } %>
+                                <option value="notyet" <% if(dataDocument[0].StatusPayment=='notyet'){%>selected<% } %>>
+                                    Belum dibayar</option>
+                                <option value="success"
+                                    <% if(dataDocument[0].StatusPayment=='success'){%>selected<% } %>>
+                                    Sudah dibayar</option>
+                                <option value="reject" <% if(dataDocument[0].StatusPayment=='reject'){%>selected<% } %>>
+                                    Pembayaran ditolak</option>
+                            </select>
+                            <label for="" style="margin-bottom: 5px;margin-top: 5px">Status Transaksi</label>
+                            <select class="form-control mb-2" id="edtStatusTrans">
+                                <option value="open" <% if(dataDocument[0].Status=='open'){%>selected<% } %>>Pemesanan
+                                    Baru</option>
+                                <option value="processed" <% if(dataDocument[0].Status=='processed'){%>selected<% } %>>
+                                    Sedang Diproses</option>
+                                <option value="awaiting" <% if(dataDocument[0].Status=='awaiting'){%>selected<% } %>>
+                                    Sedang Ditunda</option>
+                                <option value="complete" <% if(dataDocument[0].Status=='complete'){%>selected<% } %>>
+                                    Selesai</option>
+                                <option value="canceled" <% if(dataDocument[0].Status=='canceled'){%>selected<% } %>>
+                                    Dibatalkan</option>
+                            </select>
+                            <div>
+                                <button class="btn btn-primary" onclick="ChangeData()">Simpan</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="/dialog.js"></script>
+    
+    <script src="/modul.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script>
+        var transid = '<%=dataDocument[0].ID%>';
+        var docnumber = '<%=dataDocument[0].DocNumber%>';
+        function ShowImagePayment(url) {
+            if (url == '') alertshow('Gambar pembayaran tidak valid',null)
+            else location.href = '/' + url;
+        }
+        function ChangeData() {
+            var statuspayment = document.getElementById('edtStatusPayment').value;
+            var statustrans = document.getElementById('edtStatusTrans').value;
+            var sdata = {
+                "transid": transid,
+                "docnumber": docnumber,
+                "statuspayment": statuspayment,
+                "statustrans": statustrans,
+            }
+            $.ajax({
+                type: "post",
+                url: "/adminchangedataorder",
+                data: sdata,
+                success: function (response) {
+                    if (response == 'true') {
+                        alertshow('Data berhasil disimpan',function(){
+                            location.reload();
+                        });
+                    } else {
+                        alertshow('Data invalid',function(){
+                            location.reload();
+                        });
+                        
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Icon Material Design -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Hai Pasar</title>
+    <style>
+        .hrdivider {
+            height: 0px;
+            margin: 1px;
+            overflow: hidden;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .shadow {
+            box-shadow: 1px, 1px, 5px, black;
+        }
+
+        .griditem {
+            margin-top: 10px;
+            ;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+        }
+    </style>
+
+    <script>
+        function ImageError(ctx) { ctx.src = 'https://firebasestorage.googleapis.com/v0/b/myproject-7ff5a.appspot.com/o/not%20found.png?alt=media&token=4afde5af-3512-48a5-ae51-5f2cd39aae0c' }
+    </script>
+</head>
+
+<body>
+    <%- include('_sidebar_main.html'); -%>
+    <div id="lblprogress" class="progress" style="height: 5px;display: none">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
+            style="width: 100%">
+        </div>
+    </div>
+
+    <div id="bodymain">
+        <div class="container" style=margin-top:20px;>
+            <div style="display: flex;justify-content: center;align-items: center;">
+                <div class="col-md-7" style="padding: 0px;">
+
+
+                    <div class="card mb-4 shadow">
+                        <div class="card-body">
+                            <h3 style="">Data Pembayaran</h3>
+                            <div class="hrdivider"></div>
+                            <br>
+                            <% if(datashipping.length==0) { %>
+                            <div class="alert alert-danger" role="alert" style="margin-top: 15px;">
+                                Data transaksi tidak ditemukan
+                            </div>
+                            <% }else{ %>
+                            <div style="">
+                                <% if(datashipping[0].StatusPayment!='notyet') { %>
+                                <div class="alert alert-info" role="alert" style="margin-top: 15px;">
+                                    Berhasil. Mohon tunggu data pembayaran dalam proses konfirmasi
+                                </div>
+                                <% } %>
+                                <div class="alert alert-info" role="alert">
+                                    Untuk melakukan pembayaran silahkan transfer ke akun rekening berikut ini. <br>
+                                    Bank <b>BCA</b> <br>
+                                    No Rekening <b>0181827059</b> <br>
+                                    a.n <b>Vikcy Yoga Ivansyah</b> <br>
+                                </div>
+                                <hr>
+                                <label for="" style="margin-bottom: 5px;margin-top: 5px">Nomor Tagihan</label>
+                                <input type="text" class="form-control" id="edtDocNumber" value="<%=sdocnumber%>" disabled>
+                                <label for="" style="margin-bottom: 5px;margin-top: 5px">Total Tagihan</label>
+                                <input type="text" class="form-control" id="edtDocNumber" value="Rp. <%=datashipping[0].GrandTotal%>"
+                                    disabled>
+                                <label for="" style="margin-bottom: 5px;margin-top: 5px">Pilih Pembayaran</label>
+                                <select class="form-control" id="edtBank" <% if(datashipping[0].StatusPayment!='notyet') { %>
+                                    disabled <% } %>>
+                                    <option <% if(datashipping[0].ShippingPaymentBank=='Bank BCA'){%> selected <% }%>>
+                                        Bank BCA</option>
+                                    <option <% if(datashipping[0].ShippingPaymentBank=='Bank Mandiri'){%> selected
+                                        <% }%>>Bank Mandiri
+                                    </option>
+                                    <option <% if(datashipping[0].ShippingPaymentBank=='Bank BNI'){%> selected <% }%>>
+                                        Bank BNI</option>
+                                    <option <% if(datashipping[0].ShippingPaymentBank=='Bank BRI'){%> selected <% }%>>
+                                        Bank BRI</option>
+                                    <option <% if(datashipping[0].ShippingPaymentBank=='Bank CIMB'){%> selected <% }%>>
+                                        Bank CIMB</option>
+                                </select>
+                                <label for="" style="margin-bottom: 5px;margin-top: 5px">Nama Pemilik Rekening</label>
+                                <input type="text" class="form-control" id="edtNameBank"
+                                    value="<%=datashipping[0].ShippingPaymentPerson%>"
+                                    <% if(datashipping[0].StatusPayment!='notyet') { %> disabled <% } %>>
+                                <label for="" style="margin-bottom: 5px;margin-top: 5px">Nomer Rekening</label>
+                                <input type="text" class="form-control" id="edtNumberBank"
+                                    value="<%=datashipping[0].ShippingPaymentNumber%>"
+                                    <% if(datashipping[0].StatusPayment!='notyet') { %> disabled <% } %>>
+                                <label for="" style="margin-bottom: 5px;margin-top: 5px">Nominal Transfer</label>
+                                <input type="number" class="form-control" id="edtTotalTransfer" value="<%=datashipping[0].ShippingAmount%>" <% if(datashipping[0].StatusPayment!='notyet') { %> disabled <% } %> > <br>
+                                <% if(datashipping[0].StatusPayment=='notyet') { %>
+                                <label for="" style="margin-bottom: 5px;margin-top: 5px">File Bukti Pembayaran</label>
+                                <input type="file" class="form-control-file" id="edtProof" accept="image/*">
+
+                                <br>
+                                <div style="text-align: right;">
+                                    <button class="btn btn-secondary mr-1"
+                                        onclick="window.history.back();">Batalkan</button>
+                                    <button class="btn btn-success" onclick="UploadProof();">Upload Pembayaran</button>
+                                </div>
+                                <% } %>
+                            </div>
+                            <% } %>
+                            <br>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="/dialog.js"></script>
+
+    <script src="/modul.js"></script>
+
+    <script>
+        function UploadProof() {
+            if (document.getElementById("edtProof").files.length == 0) {
+                alertshow('File bukti pembayaran tidak boleh kosong !',null);
+            } else {
+                var fileProof = document.getElementById('edtProof').files[0];
+                var formdata = new FormData();
+                formdata.append('proof', fileProof);
+                formdata.append('docnumber', document.getElementById('edtDocNumber').value);
+                formdata.append('bank', document.getElementById('edtBank').value);
+                formdata.append('namebank', document.getElementById('edtNameBank').value);
+                formdata.append('numberbank', document.getElementById('edtNumberBank').value);
+                formdata.append('amount', document.getElementById('edtTotalTransfer').value);
+                $.ajax({
+                    type: "post",
+                    url: "/clientpaymentupload",
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response == 'true') {
+                            location.reload();
+                        }
+                        else alertshow(response,null);
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>

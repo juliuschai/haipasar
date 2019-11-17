@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .gridcontainer {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-content: center;
+        }
+
+        .girditems {
+            flex-grow: 1;
+            flex-shrink: 2;
+            margin: 5px;
+            flex-basis: 196px;
+            max-width: 220px;
+        }
+
+        .cursorgrab {
+            cursor: pointer;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .girditems {
+                flex-grow: 1;
+                flex-shrink: 2;
+                margin: 5px;
+                max-width: 47%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="browsedata" class="tabcontent">
+        <div style="padding: 10px;">
+            <div class="input-group">
+                <input id="edtSearch" type="text" class="form-control" placeholder="Cari Produk">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary btn-sm" onclick="SearchData()"><i class="material-icons"
+                            style="text-align: center;font-size: 16px;">
+                            search
+                        </i></button>
+                    <button class="btn btn-success btn-sm" onclick="AddProduct()"><i class="material-icons"
+                            style="text-align: center;font-size: 16px;">
+                            add
+                        </i></button>
+                </div>
+            </div>
+        </div>
+        <div class="gridcontainer" style="padding: 5px;padding-top: 0px;">
+            <%  var ctindex = ctdata*10-9;
+        for(let i = 0;i < dataProduct.length;i++) { %>
+            <div class="card girditems cursorgrab" style="">
+                <img src="<%=dataProduct[i].ImageUrl%>" onerror="this.src='/tempnotfound.png'"
+                    style="height: 100px;width: auto;margin: 2px;object-fit: cover">
+                <div class="card-body" style="padding: 15px 15px 10px 15px;">
+                    <b style="font-size: 12px;"><%=dataProduct[i].SKU%></b>
+                    <h6 style="color: green;margin-bottom: 3px;"><%=dataProduct[i].NameProduct%></h6>
+                    <div style="font-size: 12px;">
+                        Stock : <%=dataProduct[i].Stock%> <br>
+                        Rp. <%=dataProduct[i].Price%> / <%=dataProduct[i].Unit%> <br>
+
+                        <% if(dataProduct[i].isShowStock==1){ %> <b style="color: red;">tampil label tersedia</b><br>
+                        <% } %>
+                        <% if(dataProduct[i].isShow==1){ %> <b style="color: green;">di sembunyikan</b>
+                        <% } %>
+                    </div>
+
+                </div>
+                <div class="hrdivider"></div>
+                <div style="padding: 10px;">
+                    <button class="btn btn-secondary btn-sm"
+                        onclick="EditProduct('<%= JSON.stringify(dataProduct[i]) %>');"><i class="material-icons"
+                            style="font-size: 12px;text-align: center;">edit</i></button>
+                    <button class="btn btn-success btn-sm" onclick="DeleteProduct('<%=dataProduct[i].ID%>');"><i
+                            class="material-icons" style="font-size: 14px;text-align: center;">delete</i></button>
+                </div>
+            </div>
+            <% ctindex++; } %>
+        </div>
+        <div style="padding: 10px;">
+            <button class="btn btn-outline-success btn-sm" <% if(ctdata==1){ %>disabled<% } %>
+                onclick="PrevData();">Previous</button>
+            <button class="btn btn-outline-success btn-sm " <% if(dataProduct.length<10){ %>disabled<% } %>
+                onclick="NextData();">Next</button>
+        </div>
+    </div>
+
+    <div id="inputingdata" class="tabcontent">
+        <div class="container mt-3">
+            <div class="card mb-3">
+                <div class="bg-success" style="padding: 10px;">
+                    <div style="min-height: 31px;display: flex;align-items: center;">
+                        <b style="color: white;">Produk</b>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" id="edtMode">
+                    <input type="hidden" id="edtIDData">
+                    <div class="row" style="margin-bottom: 5px;">
+                        <div class="col-md-2"><label>Nomor SKU</label></div>
+                        <div class="col-md-10"><input type="text" class="form-control" id="edtSKU" placeholder="Nomor">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 5px;">
+                        <div class="col-md-2"><label>Nama Produk</label></div>
+                        <div class="col-md-10"><input type="text" class="form-control" id="edtNameProduct"
+                                placeholder="Nama"></div>
+                    </div>
+                    <div class="row" style="margin-bottom: 5px;">
+                        <div class="col-md-2"><label>Gambar</label></div>
+                        <div class="col-md-10"><input type="text" class="form-control" id="edtUrlImage"
+                                placeholder="Gambar"></div>
+                    </div>
+                    <div class="row" style="margin-bottom: 5px;">
+                        <div class="col-md-2"><label>Kategori</label></div>
+                        <div class="col-md-10"> <select class="form-control" id="edtCategory">
+                                <% for(let i2 = 0;i2 < dataCategory.length;i2++) {  %>
+                                <option><%=dataCategory[i2].NameCategory%></option>
+                                <% } %>
+                            </select></div>
+                    </div>
+                    <div class="row" style="margin-bottom: 5px;">
+                        <div class="col-md-2"><label>Unit</label></div>
+                        <div class="col-md-10"><input type="text" class="form-control" id="edtUnit" placeholder="Unit">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 5px;">
+                        <div class="col-md-2"><label>Harga</label></div>
+                        <div class="col-md-10"><input type="number" class="form-control" id="edtPrice"
+                                placeholder="Harga"></div>
+                    </div>
+                    <div class="row" style="margin-bottom: 5px;">
+                        <div class="col-md-2"><label>Stock</label></div>
+                        <div class="col-md-10"><input type="number" class="form-control" id="edtStock"
+                                placeholder="Stock"></div>
+                    </div>
+                    <div class="row" style="margin-bottom: 10px;display: none;">
+                        <div class="col-md-2"><label>Deskripsi</label></div>
+                        <div class="col-md-10"><textarea rows="5" class="form-control" id="edtDescription"></textarea>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 10px;">
+                        <div class="col-md-2"><label>Tampilkan</label></div>
+                        <div class="col-md-10">
+                            <input type="checkbox" class="" id="edtisShow">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 15px;">
+                        <div class="col-md-2"><label>Tampilkan Stock</label></div>
+                        <div class="col-md-10">
+                            <input type="checkbox" class="" id="edtisShowQty">
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <button class="btn btn-secondary mr-1" onclick="SwhtichTab('browsedata');">Batalkan</button>
+                        <button class="btn btn-success" onclick="SaveProduct();">Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        var ctdata = '<%-ctdata%>';
+
+        SwhtichTab('browsedata');
+        function SwhtichTab(smode) {
+            var stab = document.querySelectorAll(".tabcontent");
+            for (var index = 0; index < stab.length; index++) {
+                if (stab[index].id == smode) {
+                    stab[index].style.display = 'block';
+                } else {
+                    stab[index].style.display = 'none';
+                }
+            }
+        }
+
+        function AddProduct() {
+            document.getElementById('edtMode').value = 'add';
+            document.getElementById('edtIDData').value = '0';
+            document.getElementById('edtSKU').value = '';
+            document.getElementById('edtNameProduct').value = '';
+            document.getElementById('edtCategory').value = '<%=dataCategory[0].NameCategory%>';
+            document.getElementById('edtUnit').value = '';
+            document.getElementById('edtUrlImage').value = '';
+            document.getElementById('edtPrice').value = '';
+            document.getElementById('edtStock').value = '';
+            document.getElementById('edtDescription').value = '';
+            document.getElementById('edtisShow').checked = true;
+            document.getElementById('edtisShowQty').checked = false;
+            SwhtichTab('inputingdata');
+        }
+
+        function EditProduct(sdata) {
+            var sdataObj = JSON.parse(sdata);
+
+            document.getElementById('edtMode').value = 'edit';
+            document.getElementById('edtIDData').value = "dfsdfsdf";
+            document.getElementById('edtIDData').value = sdataObj.ID;
+            document.getElementById('edtSKU').value = sdataObj.SKU;
+            document.getElementById('edtNameProduct').value = sdataObj.NameProduct;
+            document.getElementById('edtCategory').value = sdataObj.NameCategory;
+            document.getElementById('edtUnit').value = sdataObj.Unit;
+            document.getElementById('edtUrlImage').value = sdataObj.ImageUrl;
+            document.getElementById('edtPrice').value = sdataObj.Price;
+            document.getElementById('edtStock').value = sdataObj.Stock;
+            document.getElementById('edtDescription').value = sdataObj.Description;
+            if (sdataObj.isShowStock == 0) document.getElementById('edtisShowQty').checked = false
+            else document.getElementById('edtisShowQty').checked = true;
+            if (sdataObj.isShow == 0) document.getElementById('edtisShow').checked = true
+            else document.getElementById('edtisShow').checked = false;
+            SwhtichTab('inputingdata');
+        }
+
+        function SaveProduct() {
+            var sshowqty = '1';
+            if (document.getElementById('edtisShowQty').checked == false)
+                sshowqty = '0';
+
+            var sshow = '1';
+            if (document.getElementById('edtisShow').checked == true)
+                sshow = '0';
+
+            var dataTmp = {
+                "mode": document.getElementById('edtMode').value,
+                "iddata": document.getElementById('edtIDData').value,
+                "category": document.getElementById('edtCategory').value,
+                "sku": document.getElementById('edtSKU').value,
+                "nameproduct": document.getElementById('edtNameProduct').value,
+                "urlimage": document.getElementById('edtUrlImage').value,
+                "unit": document.getElementById('edtUnit').value,
+                "price": document.getElementById('edtPrice').value,
+                "stock": document.getElementById('edtStock').value,
+                "description": document.getElementById('edtDescription').value,
+                "isShowQty": sshowqty,
+                "isShow": sshow
+            }
+            $.ajax({
+                type: "get",
+                url: "/productadd",
+                data: dataTmp,
+                success: function (response) {
+                    if (response == 'true') {
+                        location.reload();
+                    } else {
+                        alertshow(response,null);
+                    }
+                }
+            });
+        }
+
+        function DeleteProduct(iddata) {
+            confirmshow('Hapus Item ?',function(){
+                $.ajax({
+                    type: "get",
+                    url: "/productdelete/" + iddata,
+                    data: "",
+                    success: function (response) {
+                        if (response == 'true') {
+                            location.reload();
+                        } else {
+                            alertshow('Data invalid',function(){
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+        }
+
+        var edtSearch = document.getElementById("edtSearch");
+        edtSearch.addEventListener("keyup", function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                SearchData();
+            }
+        });
+
+        function SearchData() {
+            var ssearch = document.getElementById('edtSearch').value;
+            $("#maincontent").load("/adminproduct", 'search=' + ssearch);
+        }
+
+        function NextData() {
+            ctdata = parseInt(ctdata) + 1;
+            $("#maincontent").load("/adminproduct?ctdata=" + ctdata);
+        }
+
+        function PrevData() {
+            if (ctdata != 1) {
+                ctdata = parseInt(ctdata) - 1;
+                $("#maincontent").load("/adminproduct?ctdata=" + ctdata);
+            }
+        }
+
+    </script>
+</body>
+
+</html>

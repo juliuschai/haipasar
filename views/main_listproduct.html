@@ -1,0 +1,325 @@
+<!-- main cart -->
+<div id="divcart" class="divcart" style="display: none;">
+  <div class="divcartbg shadow">
+    <div style="display: flex;justify-content:space-between;align-items:center;margin-bottom: 7px;">
+      <h6 id="lblItemCart">-</h6>
+      <h6 id="lblPriceQtyCart">-</h6>
+    </div>
+    <div style="display: flex;justify-content: space-between;align-items: center;">
+      <div style="width: 100%;">
+        <div style="position: relative;">
+          <div class="input-group" style="padding-right: 30px;">
+            <div class="input-group-prepend">
+              <button class="btn btn-success" type="button" onclick="CartMinus();"><i class="material-icons"
+                  style="font-size: 12px;text-align: center;">
+                  remove
+                </i></button>
+            </div>
+            <input type="hidden" id="edtIDData">
+            <input id="edtQty" type="number" class="form-control" placeholder="" value="1" min="1"
+              style="text-align: center;">
+            <div class="input-group-append">
+              <button class="btn btn-success" type="button" onclick="CartAdd();"><i class="material-icons"
+                  style="font-size: 12px;">
+                  add
+                </i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="width: 100%;display: flex;justify-content:space-between;align-items:center; ">
+        <button class="btn btn-success mr-1" style="flex-grow: 9" onclick="AddItemCart();">Tambah</button>
+        <button class="btn btn-danger" style="flex-grow: 1;" onclick="CartClose();">
+          <i class="material-icons"
+            style="font-size: 16px;text-align:center;vertical-align: middle;padding-bottom: 2px;">
+            close
+          </i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- data promo -->
+<% if(dataProductPromo.length>0){ %>
+<div class="divscroll">
+  <h5 style="margin-left: 5px;margin-right: 5px;margin-top: 10px;margin-bottom: 5px;">Hot Promo</h5>
+</div>
+<div style="padding: 5px;">
+  <div class="divscroll">
+    <div class="hidemobile" style="position: relative;">
+      <button id="slideBack"
+        style="position: absolute;left: 0;top: 80px; z-index:900;height: 50px;background-color: transparent;"
+        class="btn btn-sm"><i style="text-align: center;vertical-align: middle;" class="material-icons">
+          navigate_before
+        </i></button>
+      <button id="slide"
+        style="position: absolute;right: 0;top: 80px; z-index:900;height: 50px;background-color: transparent;"
+        class="btn btn-sm"><i style="text-align: center;vertical-align: middle;" class="material-icons">
+          navigate_next
+        </i></button>
+    </div>
+  </div>
+
+  <div class="divscroll">
+    <div id="containerscroll" class="containerscroll">
+      <% for(let i = 0;i < dataProductPromo.length;i++) {  %>
+      <div class="itemscroll">
+        <div class="card cursorgrab" style="width: 100%;height: 100%;">
+          <img src="<%=dataProductPromo[i].ImageUrl%>" onerror="this.src='/tempnotfound.png'"
+            style="height: 100px;width: auto;margin: 2px;"
+            onclick="location.href='/product/<%=dataProductPromo[i].ID%>'">
+          <div class="card-body"
+            style="padding: 4px 15px 9px 15px;display:flex;flex-direction: column; justify-content:flex-end;"
+            onclick="location.href='/product/<%=dataProductPromo[i].ID%>'">
+            <div style="font-size: 12px;text-align: right; color: grey;">
+              <% if(dataProductPromo[i].isShowStock==1){ %>tersedia
+              <%=dataProductPromo[i].Stock%> <%=dataProductPromo[i].Unit%> <% } %></div>
+            <h6 style="color: green;margin-bottom: 5px;"><%=dataProductPromo[i].NameProduct%></h6>
+            <b>Rp.<%=dataProductPromo[i].Price%> / <%=dataProductPromo[i].Unit%></b>
+          </div>
+          <button class="btn btn-success btn-sm" style="border-top-right-radius: 0px;border-top-left-radius: 0px;">
+            <div style="text-align: center;" onclick="CartShow('<%=JSON.stringify(dataProductPromo[i])%>');"><i
+                class="material-icons mr-1" style="font-size: 12px;text-align: center;">shopping_cart</i>Beli</div>
+          </button>
+        </div>
+      </div>
+      <% }%>
+    </div>
+  </div>
+</div>
+<script>
+  var button = document.getElementById('slide');
+  button.onclick = function () {
+    var container = document.getElementById('containerscroll');
+    sideScroll(container, 'right', 20, 300, 10);
+  };
+
+  var back = document.getElementById('slideBack');
+  back.onclick = function () {
+    var container = document.getElementById('containerscroll');
+    sideScroll(container, 'left', 20, 300, 10);
+  };
+  function sideScroll(element, direction, speed, distance, step) {
+    scrollAmount = 0;
+    var slideTimer = setInterval(function () {
+      if (direction == 'left') {
+        element.scrollLeft -= step;
+      } else {
+        element.scrollLeft += step;
+      }
+      scrollAmount += step;
+      if (scrollAmount >= distance) {
+        window.clearInterval(slideTimer);
+      }
+    }, speed);
+  }
+</script>
+<% } %>
+
+<% if(dataProductNewsItems.length>0){ %>
+<!-- data new items -->
+<div class="divscroll">
+  <h5 style="margin-left: 5px;margin-right: 5px;margin-top: 10px;margin-bottom: 5px;">Produk Terbaru</h5>
+</div>
+<div style="padding: 5px;">
+  <div class="divscroll">
+    <div class="hidemobile" style="position: relative;">
+      <button id="slideBackPromo"
+        style="position: absolute;left: 0;top: 80px; z-index:900;height: 50px;background-color: transparent;"
+        class="btn btn-sm"><i style="text-align: center;vertical-align: middle;" class="material-icons">
+          navigate_before
+        </i></button>
+      <button id="slidePromo"
+        style="position: absolute;right: 0;top: 80px; z-index:900;height: 50px;background-color: transparent;"
+        class="btn btn-sm"><i style="text-align: center;vertical-align: middle;" class="material-icons">
+          navigate_next
+        </i></button>
+    </div>
+  </div>
+
+  <div class="divscroll">
+    <div id="containerPromo" class="containerscroll">
+      <% for(let i = 0;i < dataProductNewsItems.length;i++) {  %>
+      <div class="itemscroll">
+        <div class="card cursorgrab" style="width: 100%;height: 100%;">
+          <img src="<%=dataProductNewsItems[i].ImageUrl%>" onerror="this.src='/tempnotfound.png'"
+            style="height: 100px;width: auto;margin: 2px;"
+            onclick="location.href='/product/<%=dataProductNewsItems[i].ID%>'">
+          <div class="card-body"
+            style="padding: 4px 15px 9px 15px;display:flex;flex-direction: column; justify-content:flex-end;"
+            onclick="location.href='/product/<%=dataProductNewsItems[i].ID%>'">
+            <div style="font-size: 12px;text-align: right; color: grey;">
+              <% if(dataProductNewsItems[i].isShowStock==1){ %>tersedia
+              <%=dataProductNewsItems[i].Stock%> <%=dataProductNewsItems[i].Unit%> <% } %></div>
+            <h6 style="color: green;margin-bottom: 5px;"><%=dataProductNewsItems[i].NameProduct%></h6>
+            <b>Rp.<%=dataProductNewsItems[i].Price%> / <%=dataProductNewsItems[i].Unit%></b>
+          </div>
+          <button class="btn btn-success btn-sm" style="border-top-right-radius: 0px;border-top-left-radius: 0px;">
+            <div style="text-align: center;" onclick="CartShow('<%=JSON.stringify(dataProductNewsItems[i])%>');"><i
+                class="material-icons mr-1" style="font-size: 12px;text-align: center;">shopping_cart</i>Beli</div>
+          </button>
+        </div>
+      </div>
+      <% }%>
+    </div>
+  </div>
+</div>
+<script>
+  var button = document.getElementById('slidePromo');
+  button.onclick = function () {
+    var container = document.getElementById('containerPromo');
+    sideScroll(container, 'right', 20, 300, 10);
+  };
+
+  var back = document.getElementById('slideBackPromo');
+  back.onclick = function () {
+    var container = document.getElementById('containerPromo');
+    sideScroll(container, 'left', 20, 300, 10);
+  };
+  function sideScroll(element, direction, speed, distance, step) {
+    scrollAmount = 0;
+    var slideTimer = setInterval(function () {
+      if (direction == 'left') {
+        element.scrollLeft -= step;
+      } else {
+        element.scrollLeft += step;
+      }
+      scrollAmount += step;
+      if (scrollAmount >= distance) {
+        window.clearInterval(slideTimer);
+      }
+    }, speed);
+  }
+</script>
+<% } %>
+
+<!-- data main -->
+<div class="divscroll">
+  <h5 style="margin-left: 5px;margin-right: 5px;margin-top: 10px;margin-bottom: 5px;"><% if(ssearch==''){ %> Semua
+    Produk <% }else {%> Kata Pencarian : <%=ssearch%> <% } %></h5>
+</div>
+<% if(dataProduct.length==0) {  %>
+<div class="alert alert-info" role="alert" style="margin-top: 15px;">
+  Tidak ada produk yang ditemukan
+</div>
+<% }else{ %>
+<div data-aos="" style="padding: 5px;">
+  <div data-aos="fade-up" class="containerlist">
+    <% for(let i = 0;i < dataProduct.length;i++) {  %>
+    <div class="itemlist">
+      <div data-aos="fade-up" class="card cursorgrab" style="width: 100%;height: 100%;">
+        <img src="<%=dataProduct[i].ImageUrl%>" onerror="this.src='/tempnotfound.png'"
+          style="height: 100px;width: auto;margin: 2px;" onclick="location.href='/product/<%=dataProduct[i].ID%>'">
+        <div class="card-body"
+          style="padding: 4px 15px 9px 15px;display:flex;flex-direction: column; justify-content:flex-end;"
+          onclick="location.href='/product/<%=dataProduct[i].ID%>'">
+          <div style="font-size: 12px;text-align: right; color: grey;"><% if(dataProduct[i].isShowStock==1){ %>tersedia
+            <%=dataProduct[i].Stock%> <%=dataProduct[i].Unit%> <% } %></div>
+          <h6 style="color: green;margin-bottom: 5px;"><%=dataProduct[i].NameProduct%></h6>
+          <b>Rp.<%=dataProduct[i].Price%> / <%=dataProduct[i].Unit%></b>
+        </div>
+        <button class="btn btn-success btn-sm" style="border-top-right-radius: 0px;border-top-left-radius: 0px;">
+          <div style="text-align: center;" onclick="CartShow('<%=JSON.stringify(dataProduct[i])%>');"><i
+              class="material-icons mr-1" style="font-size: 12px;text-align: center;">shopping_cart</i>Beli</div>
+        </button>
+      </div>
+    </div>
+    <% }%>
+  </div>
+</div>
+<% }%>
+<hr>
+
+<!-- pagination -->
+<nav aria-label="pagination">
+  <ul class="pagination">
+    <li class="page-item <% if(ctdata==1){ %>disabled<% } %>"><a class="page-link text-success" href="#"
+        onclick="PrevData();">Previous</a></li>
+    <% for(let i = 0;i < ctpagintaion;i++) {  %>
+    <li class="page-item"><a
+        class="page-link  <% if((i+1)==ctdata){ %>text-light bg-success<% }else{ %>text-success<% } %>" href="#"
+        onclick="PaginationData('<%=i+1%>')"><%=i+1%></a></li>
+    <% }%>
+    <li class="page-item <% if((ctdata==ctpagintaion) || (ctpagintaion==0) ){ %>disabled<% } %>"><a
+        class="page-link text-success" href="#" onclick="NextData();">Next</a></li>
+  </ul>
+</nav>
+
+<script>
+
+  // Pagination
+  var ctdata = '<%-ctdata%>';
+  function PaginationData(ct) {
+    document.getElementById('lblprogress').style.display = 'flex';
+    let params = 'category=' + document.getElementById('edtCategory').value + '&search=' + document.getElementById("edtSearch").value + '&ctdata=' + ct;
+    $("#maincontent").load(encodeURI("/main_listproduct?" + params),
+      function (response, status, xhr) {
+        document.getElementById('lblprogress').style.display = 'none';
+      }
+    );
+  }
+  function NextData() {
+    ctdata = parseInt(ctdata) + 1;
+    let params = 'category=' + document.getElementById('edtCategory').value + '&search=' + document.getElementById("edtSearch").value + '&ctdata=' + ctdata;
+    $("#maincontent").load(encodeURI("/main_listproduct?" + params),
+      function (response, status, xhr) {
+        document.getElementById('lblprogress').style.display = 'none';
+      }
+    );
+  }
+  function PrevData() {
+    if (ctdata != 1) {
+      ctdata = parseInt(ctdata) - 1;
+      let params = 'category=' + document.getElementById('edtCategory').value + '&search=' + document.getElementById("edtSearch").value + '&ctdata=' + ctdata;
+      $("#maincontent").load(encodeURI("/main_listproduct?" + params),
+        function (response, status, xhr) {
+          document.getElementById('lblprogress').style.display = 'none';
+        }
+      );
+    }
+  }
+
+  function CartShow(objtemp) {
+    var obj = JSON.parse(objtemp)
+    document.getElementById('edtIDData').value = obj.ID;
+    document.getElementById('edtQty').value = '1';
+    document.getElementById('lblItemCart').innerHTML = obj.NameProduct;
+    document.getElementById('lblPriceQtyCart').innerHTML = 'Rp.' + obj.Price + '/' + obj.Unit;
+    document.getElementById('divcart').style.display = 'flex';
+  }
+
+  function CartClose() {
+    document.getElementById('divcart').style.display = 'none';
+  }
+
+  function CartAdd() {
+    document.getElementById('edtQty').value = parseInt(document.getElementById('edtQty').value) + 1;
+  }
+
+  function CartMinus() {
+    var qty = parseInt(document.getElementById('edtQty').value)
+    if (qty - 1 > 0) document.getElementById('edtQty').value = parseInt(document.getElementById('edtQty').value) - 1;
+  }
+
+  function AddItemCart() {
+    var qtyUnit = document.getElementById('edtQty').value;
+    var iddata = document.getElementById('edtIDData').value;
+    $.ajax({
+      type: "get",
+      url: "/cartadd/" + iddata + "/" + qtyUnit,
+      data: "",
+      success: function (response) {
+        if (response == 'true') {
+          var alertclose = function () { CartClose(); };
+          alertshow('Produk telah di tambahkan ke daftar keranjang', alertclose);
+        } else {
+          var alertclose = function () { location.reload(); }
+          alertshow(response, alertclose);
+        }
+      }
+    });
+  }
+
+
+</script>

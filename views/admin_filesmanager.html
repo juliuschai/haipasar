@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head></head>
+
+<body>
+    <div class="container mt-3">
+        <h4>Files Manager</h4>
+
+        <div id="browsedata" class="tabadminproduct">
+
+            <div class="card">
+                <div class="bg-success"
+                    style="padding: 10px;display: flex;justify-content: space-between;align-items: center;">
+                    <b style="color: white">Files Manager</b>
+                    <button class="btn btn-dark btn-sm" onclick="AddData();">Tambah</button>
+                </div>
+
+                <div style="overflow: auto;">
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nama File</th>
+                                <th>Url</th>
+                                <th style="min-width: 100px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%      var ctindex = ctdata*10-9;
+                                    for(let i = 0;i < dataBanner.length;i++) {  %>
+                            <tr>
+                                <th><%=ctindex%></th>
+                                <td><%=dataBanner[i].NameFile%></td>
+                                <td><a href="/file/<%=dataBanner[i].Path%>">/file/<%=dataBanner[i].Path%></a></td>
+                                <td style="text-align: right;">
+                                    <button class="btn btn-secondary btn-sm"
+                                    onclick="Copy('/file/<%=dataBanner[i].Path%>');"><i class="material-icons"
+                                        style="font-size: 14px;text-align: center;">file_copy</i></button>
+                                    <button class="btn btn-success btn-sm"
+                                        onclick="DeleteData('<%=dataBanner[i].ID%>');"><i class="material-icons"
+                                            style="font-size: 14px;text-align: center;">delete</i></button>
+                                </td>
+                            </tr>
+                            <% ctindex++; } %>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-outline-success btn-sm <% if(ctdata==1){ %>btn-hide<% } %>"
+                    onclick="PrevData();">Previous</button>
+                <button class="btn btn-outline-success btn-sm <% if(dataBanner.length<10){ %>btn-hide<% } %>"
+                    onclick="NextData();">Next</button>
+            </div>
+
+
+        </div>
+        <div class="tabadminproduct" id="inputingdata">
+            <div class="card">
+                <div class="bg-success" style="padding: 10px;">
+                    <div style="min-height: 31px;display: flex;align-items: center;">
+                        <b style="color: white;">Files Manager</b>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" id="edtMode">
+                    <input type="hidden" id="edtIDData">
+                    <div class="row" style="margin-bottom: 15px;">
+                        <label class=" col-md-2">Nama File</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control " id="edtNameFile" placeholder="Nama">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 15px;">
+                        <label for="" class=" col-md-2">File</label>
+                        <div class="col-md-10">
+                            <input type="file" class="form-control-file" id="edtFile" accept="image/*">
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <button class="btn btn-secondary mr-1" onclick="SwhtichTab('browsedata');">Batalkan</button>
+                        <button class="btn btn-success" onclick="SaveData();">Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        var ctdata = '<%-ctdata%>';
+
+        SwhtichTab('browsedata');
+        function SwhtichTab(smode) {
+            var stab = document.querySelectorAll(".tabadminproduct");
+            for (var index = 0; index < stab.length; index++) {
+                if (stab[index].id == smode) {
+                    stab[index].style.display = 'block';
+                } else {
+                    stab[index].style.display = 'none';
+                }
+            }
+        }
+
+        function AddData() {
+            document.getElementById('edtMode').value = 'add';
+            document.getElementById('edtIDData').value = '0';
+            document.getElementById('edtNameFile').value = '';
+            document.getElementById('edtFile').value = '';
+            SwhtichTab('inputingdata');
+        }
+
+        function SaveData() {
+            if (document.getElementById("edtFile").files.length == 0) {
+                alertshow('File tidak boleh kosong !',null);
+            } else {
+                var fileData = document.getElementById('edtFile').files[0];
+                var formdata = new FormData();
+                formdata.append('datafile', fileData);
+                formdata.append('namefile', document.getElementById('edtNameFile').value);
+                $.ajax({
+                    type: "post",
+                    url: "/filemanagersave",
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response == 'true') {
+                            location.reload();
+                        } else {
+                            alertshow(response,null);
+                        }
+                    }
+                });
+            }
+        }
+
+        function DeleteData(iddata) {
+            confirmshow('Hapus Item ?',function(){
+                $.ajax({
+                    type: "get",
+                    url: "/filemanagerdelete/" + iddata,
+                    data: "",
+                    success: function (response) {
+                        if (response == 'true') {
+                            location.reload();
+                        } else {
+                            alertshow('Data invalid',function(){
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+        }
+
+        function Copy(textData){
+            var copyText = document.createElement('input');
+            copyText.setAttribute('type', 'text');
+            copyText.value=textData;
+            document.body.appendChild(copyText);
+            copyText.select();
+            document.execCommand("copy");
+            alertshow("Copied",null);
+            document.body.removeChild(copyText);
+        }
+
+
+        function NextData() {
+            ctdata = parseInt(ctdata) + 1;
+            $("#maincontent").load("/adminfilesmanager?ctdata=" + ctdata);
+        }
+
+        function PrevData() {
+            if (ctdata != 1) {
+                ctdata = parseInt(ctdata) - 1;
+                $("#maincontent").load("/adminfilesmanager?ctdata=" + ctdata);
+            }
+        }
+
+    </script>
+</body>
+
+</html>

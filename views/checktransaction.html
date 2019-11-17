@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Icon Material Design -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <title>Hai Pasar</title>
+    <style>
+        .hrdivider {
+            height: 0px;
+            margin: 1px;
+            overflow: hidden;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .shadow {
+            box-shadow: 1px, 1px, 5px, black;
+        }
+
+        .griditem {
+            margin-top: 10px;
+            ;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+        }
+    </style>
+
+    <script>
+        function ImageError(ctx) { ctx.src = 'https://firebasestorage.googleapis.com/v0/b/myproject-7ff5a.appspot.com/o/not%20found.png?alt=media&token=4afde5af-3512-48a5-ae51-5f2cd39aae0c' }
+    </script>
+</head>
+
+<body>
+    <%- include('_sidebar_main.html'); -%>
+    <div id="lblprogress" class="progress" style="height: 5px;display: none">
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
+            style="width: 100%">
+        </div>
+    </div>
+
+    <div id="bodymain">
+        <div data-aos="fade-up" class="container" style=margin-top:20px;>
+            <div class="card mb-4 shadow">
+                <div class="card-body">
+
+                    <h3 style="">Riwayat Pesanan</h3>
+                    <div class="hrdivider"></div>
+                    <br>
+                    <h5>Masukan nomer invoice</h5>
+                    <div class="input-group">
+                        <input id="edtSearch" type="text" class="form-control" placeholder="Nomor invoice">
+                        <div class="input-group-append">
+                            <button class="btn btn-success" onclick="GetData()">Check</button>
+                        </div>
+                    </div>
+                    <br>
+
+                </div>
+            </div>
+
+            <div id="maincontent"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="/modul.js"></script>
+
+    <script>
+        AOS.init({ once: true });
+
+        var edtSearch = document.getElementById("edtSearch");
+        edtSearch.addEventListener("keyup", function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                GetData();
+            }
+        });
+
+        function GetData() {
+            document.getElementById('lblprogress').style.display = 'flex';
+            $("#maincontent").load("/checktransaction_list", 'search=' + edtSearch.value,
+                function (response, status, xhr) {
+                    document.getElementById('lblprogress').style.display = 'none';
+                }
+            );
+        }
+    </script>
+</body>
+
+</html>

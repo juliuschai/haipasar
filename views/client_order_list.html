@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Material Design -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        .btn-hide {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <% if(dataProduct.length==0){ %>
+    <div class="alert alert-info" role="alert" style="margin-top: 15px;">
+        Tidak ada data
+    </div>
+    <% }else{ %>
+    <% 
+                                        var ctindex = ctdata*10-9;
+                                        for(let i = 0;i < dataProduct.length;i++) {  %>
+    <div class="card mb-1 cursorgrab"
+        onclick="location.href= '/dashboardorderdetail?docnumber=<%=dataProduct[i].DocNumber%>'">
+        <div style="padding-right: 15px;padding-left: 15px;padding-top: 15px;">
+            <h6>#<%=dataProduct[i].DocNumber%> <span style="float: right;"><%=dataProduct[i].TimeCreated1%></span></h6>
+            <hr>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <div style="padding-right: 15px;padding-left: 15px;padding-bottom: 15px;">
+                    <table>
+                        <tr>
+                            <td>Transaksi</td>
+                            <td><span style="margin-left: 15px;"><b>
+                                        <% if(dataProduct[0].Status=='open'){%> Belum dikonfirmasi
+                                        <% } else if(dataProduct[0].Status=='processed'){ %> Sedang diproses
+                                        <% } else if(dataProduct[0].Status=='awaiting'){ %> Menunggu konfirmasi
+                                        <% } else if(dataProduct[0].Status=='complete'){ %> Berhasil
+                                        <% } else if(dataProduct[0].Status=='canceled'){ %> Dibatalkan
+                                        <% }; %>
+                                    </b></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Pembayaran</td>
+                            <td><span style="margin-left: 15px;">
+                                    <% if(dataProduct[i].StatusPayment=='notyet'){%> Belum melakukan pembayaran
+                                    <% } else if(dataProduct[i].StatusPayment=='waiting'){ %> Menunggu konfirmasi
+                                    <% } else if(dataProduct[i].StatusPayment=='success'){ %> Berhasil
+                                    <% } else if(dataProduct[i].StatusPayment=='reject'){ %> Tidak valid
+                                    <% }; %>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td><span style="margin-left: 15px;"><b>Rp.
+                                        <%=dataProduct[i].GrandTotal%></b></span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% ctindex++; } %>
+    <% } %>
+</body>
+
+</html>

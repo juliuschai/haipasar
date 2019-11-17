@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Icon Material Design -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Print JS -->
+    <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+    <link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css">
+    <title>Hai Pasar</title>
+    <style>
+        .divitems {
+            width: 50%;
+            display: flex;
+        }
+
+        .griddata {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .griditem {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .hrdivider {
+            height: 0px;
+            margin: 1px;
+            overflow: hidden;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .shadow {
+            box-shadow: 1px, 1px, 5px, black;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .divitems {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+        function ImageError(ctx) { ctx.src = 'https://firebasestorage.googleapis.com/v0/b/myproject-7ff5a.appspot.com/o/not%20found.png?alt=media&token=4afde5af-3512-48a5-ae51-5f2cd39aae0c' }
+    </script>
+</head>
+
+<body>
+    <%- include('_sidebar_main.html'); -%>
+    <div id="bodymain">
+
+        <div class="container" style=margin-top:20px;>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div id="divpengiriman" class="card mb-4 shadow">
+                        <div class="card-body">
+
+                            <h3 style="">Daftar Pesanan</h3>
+                            <div class="hrdivider"></div>
+                            <div class="griddata">
+                                <%  if (data.length==0) { %>
+                                <div class="alert alert-primary" role="alert" style="margin-top: 15px;">
+                                    Tidak ada barang pesanan
+                                </div>
+                                <div class="hrdivider"></div>
+                                <% } else { %>
+                                <% for(let i = 0;i < data.length;i++) {  %>
+                                <div class="griditem">
+                                    <img src="<%=data[i].ImageUrl%>" alt="" style="width:80px;margin-right: 15px;">
+                                    <div style="width: 100%;">
+                                        <b><%=data[i].NameProduct%></b>
+                                        <div style="font-size: 12px;">Harga Rp. <%=data[i].Price%>/<%=data[i].Unit%>
+                                        </div>
+                                        <div
+                                            style="display: flex;justify-content:space-around;align-items: center;margin-top: 5px;">
+                                            <div style="width: 50%;">
+                                                <input id="edtQty" type="number" class="form-control" placeholder=""
+                                                    value="<%=data[i].Qty%>" min="1" style="text-align: center;"
+                                                    onchange="ChangeQty('<%=data[i].IDProduct%>',this.value)">
+                                            </div>
+                                            <div style="width: 100%;text-align: center;">
+                                                <button class="btn btn-success" type="button"
+                                                    onclick="CartMinus('<%=data[i].IDProduct%>','<%=data[i].Qty%>');"><i
+                                                        class="material-icons"
+                                                        style="font-size: 12px;text-align: center;">
+                                                        remove
+                                                    </i></button>
+                                                <button class="btn btn-success" type="button"
+                                                    onclick="CartAdd('<%=data[i].IDProduct%>','<%=data[i].Qty%>');"><i
+                                                        class="material-icons" style="font-size: 12px;">
+                                                        add
+                                                    </i></button>
+                                                <button class="btn btn-danger" type="button"
+                                                    onclick="DeleteCart('<%=data[i].IDProduct%>');"><i
+                                                        class="material-icons" style="font-size: 12px;">
+                                                        delete
+                                                    </i></button>
+                                            </div>
+
+                                        </div>
+                                        <p style="margin-top: 5px;"><b>Total Rp. <%=data[i].Total%></b></p>
+                                    </div>
+                                </div>
+                                <div class="hrdivider"></div>
+                                <% } %>
+                                <% } %>
+                                <b style="margin-top: 15px;font-size: 1.2rem;">Total Pemesanan : Rp.
+                                    <%if (total=='' || total==null ){%> - <%}else{%> <%=total%> <%}%></b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                            <div class="col-md-6">
+                                  <!-- info login -->
+                                <% if(sessionaccount.status=='false'){ %>
+                                    <div class="card mb-4 shadow">
+                                        <div class="card-body">
+                                            <h5 style="text-align: center;">Login akun untuk mesinkron data pengiriman
+                                            </h5>
+                                            <button class="btn btn-success btn-block"
+                                                onclick="LoginMode();">Login</button>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                    <div id="divpembayaran" class="card mb-4 shadow">
+                                        <div class="card-body">
+                                            <!-- data shipping -->
+                                            <h3 style="">Data Pengiriman</h3>
+                                            <div class="hrdivider"></div>
+                                            <div style="">
+                                                <label for="" style="margin-bottom: 5px;margin-top: 5px">Nama
+                                                    Penerima</label>
+                                                <input type="text" class="form-control" id="edtRicipent"
+                                                    value="<%=datashipping.namaPenerima%>">
+                                                <label for="" style="margin-bottom: 5px;margin-top: 5px">Email</label>
+                                                <input type="text" class="form-control" id="edtEmail"
+                                                    value="<%=datashipping.email%>">
+                                                <label for="" style="margin-bottom: 5px;margin-top: 5px">Nomor
+                                                    HP</label>
+                                                <input type="text" class="form-control" id="edtNoTelp"
+                                                    value="<%=datashipping.noTelp%>">
+                                                <label for="" style="margin-bottom: 5px;margin-top: 5px">Kota/
+                                                    Kecamatan</label>
+                                                <input type="text" class="form-control" id="edtCity"
+                                                    value="<%=datashipping.kota%>">
+                                                <label for="" style="margin-bottom: 5px;margin-top: 5px">Alamat</label>
+                                                <textarea rows="5" class="form-control"
+                                                    id="edtAddress"><%=datashipping.alamat%></textarea>
+                                                <label for="" style="margin-bottom: 5px;margin-top: 5px">Kode
+                                                    Pos</label>
+                                                <input type="text" class="form-control" id="edtCodePos"
+                                                    value="<%=datashipping.kodepos%>">
+                                                <label for="" style="margin-bottom: 5px;margin-top: 5px">Catatan</label>
+                                                <textarea rows="5" class="form-control" id="edtNotes"
+                                                    placeholder="Catatan Pemesanan"></textarea>
+                                                <br>
+                                                <button class="btn btn-success btn-block"
+                                                    onclick="ConfrimOrder();">Proses
+                                                    Pemesanan</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Print Invoice -->
+                <div style="display: none;">
+                    <div id="Print-Report">
+                        <h1 style="text-align: right;">Bukti Order</h1>
+                        <h4>Data Pemesanan</h4>
+                        <table>
+                            <tr>
+                                <td>Tanggal Order</td>
+                                <td id="lblPrintDate">12 Okt 2019</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 150px;">Nomor Order</td>
+                                <td style="width: 150px;" id="lblPrintInvoice">191022001</td>
+                            </tr>
+                        </table>
+                        <hr>
+
+                        <h4>Data Penerima</h4>
+                        <table>
+                            <tr>
+                                <td style="width: 150px;">Nama Pembeli</td>
+                                <td style="width: 150px;" id="lblPrintNama">-</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td id="lblPrintEmail">-</td>
+                            </tr>
+                            <tr>
+                                <td>Kontak</td>
+                                <td id="lblPrintKontak">-</td>
+                            </tr>
+                            <tr>
+                                <td>Alamat</td>
+                                <td id="lblPrintAlamat">-</td>
+                            </tr>
+                            <tr>
+                                <td>Kota</td>
+                                <td id="lblPrintKota">-</td>
+                            </tr>
+                            <tr>
+                                <td>Kode Pos</td>
+                                <td id="lblPrintKodePOS">-</td>
+                            </tr>
+                        </table>
+                        <hr>
+                        <h4>Data Pemesanan</h4>
+
+                        <div>
+                            <table style="width: 100%;">
+                                <tr>
+                                    <th style="border-color: black;border-width: 1px; border-style: solid;padding:5px">
+                                        Nama Barang</th>
+                                    <th style="border-color: black;border-width: 1px; border-style: solid;padding:5px">
+                                        Jumlah</th>
+                                    <th style="border-color: black;border-width: 1px; border-style: solid;padding:5px">
+                                        Harga</th>
+                                    <th style="border-color: black;border-width: 1px; border-style: solid;padding:5px">
+                                        Total</th>
+                                </tr>
+                                <% for(let i = 0;i < data.length;i++) {  %>
+                                <tr>
+                                    <td style="border-color: black;border-width: 1px; border-style: solid;padding:5px">
+                                        <%=data[i].NameProduct%></td>
+                                    <td style="border-color: black;border-width: 1px; border-style: solid;padding:5px">
+                                        <%=data[i].Qty%> <%=data[i].Unit%></td>
+                                    <td
+                                        style="border-color: black;border-width: 1px; border-style: solid;padding:5px;text-align: right">
+                                        <%=data[i].Price%></td>
+                                    <td
+                                        style="border-color: black;border-width: 1px; border-style: solid;padding:5px;text-align: right">
+                                        <%=data[i].Total%></td>
+                                </tr>
+                                <% } %>
+                                <tr>
+                                    <td colspan="3"
+                                        style="border-color: black;border-width: 1px; border-style: solid;padding:5px;text-align: right;">
+                                        <b>Total</b> </td>
+                                    <td
+                                        style="border-color: black;border-width: 1px; border-style: solid;padding:5px;text-align: right;">
+                                        <%=total%></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <hr>
+                        <b>@www.haipasar.com</b>
+                    </div>
+
+                </div>
+
+                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+                <script src="/dialog.js"></script>
+
+                <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+                <script src="/modul.js"></script>
+                <script>
+                    AOS.init({ once: true });
+
+                    var ctcart = '<%-data.length%>';
+
+                    function DeleteCart(itemid) {
+                        $.ajax({
+                            type: "get",
+                            url: "/cartdelete/" + itemid,
+                            data: "",
+                            success: function (response) {
+                                if (response == 'true') {
+                                    alertshow('Produk telah di hapus dari daftar keranjang',function(){
+                                        location.reload();
+                                    });
+                                } else {
+                                    alertshow('Data invalid',function(){
+                                        location.reload();
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    function ChangeQty(iddata, qty) {
+                        $.ajax({
+                            type: "get",
+                            url: "/cartedtqty/" + iddata + "/" + qty,
+                            data: "",
+                            success: function (response) {
+                                if (response == 'true') {
+                                    location.reload();
+                                } else {
+                                    alertshow(response,function(){
+                                        location.reload();
+                                    });
+                                }
+                            }
+                        });
+                    }
+
+                    function CartAdd(idproduct, qty) {
+                        ChangeQty(idproduct, parseInt(qty) + 1)
+                    }
+
+                    function CartMinus(idproduct, qty) {
+                        if (qty - 1 > 0)
+                            ChangeQty(idproduct, parseInt(qty) - 1)
+                    }
+
+                    function ConfrimOrder() {
+                        if (ctcart == 0) {
+                            alertshow('Mohon pilih produk terlebih dahulu',null);
+                        } else {
+                            var sdata = {
+                                "namereceipt": document.getElementById('edtRicipent').value,
+                                "emailreceipt": document.getElementById('edtEmail').value,
+                                "numberreceipt": document.getElementById('edtNoTelp').value,
+                                "city": document.getElementById('edtCity').value,
+                                "address": document.getElementById('edtAddress').value,
+                                "codePos": document.getElementById('edtCodePos').value,
+                                "notes": document.getElementById('edtNotes').value
+                            }
+                            confirmshow('Kirim pesanan',function(){
+                                $.ajax({
+                                    type: "get",
+                                    url: "/transactionsender",
+                                    data: sdata,
+                                    success: function (response) {
+                                        if (response.status == true) {
+                                            PrintInvoice(response);
+                                        } else if (response.status == false) {
+                                            alertshow(response.message,function(){
+                                                location.reload();
+                                            });
+                                        }
+                                    }
+                                })
+                            });
+                        }
+                    }
+
+                    function PrintInvoice(response) {
+                        document.getElementById('lblPrintDate').innerHTML = response.tanggal;
+                        document.getElementById('lblPrintInvoice').innerHTML = response.invoice;
+
+                        document.getElementById('lblPrintNama').innerHTML = document.getElementById('edtRicipent').value,
+                            document.getElementById('lblPrintEmail').innerHTML = document.getElementById('edtEmail').value,
+                            document.getElementById('lblPrintKontak').innerHTML = document.getElementById('edtNoTelp').value,
+                            document.getElementById('lblPrintKota').innerHTML = document.getElementById('edtCity').value,
+                            document.getElementById('lblPrintAlamat').innerHTML = document.getElementById('edtAddress').value,
+                            document.getElementById('lblPrintKodePOS').innerHTML = document.getElementById('edtCodePos').value,
+                            // document.getElementById('id').innerHTML= document.getElementById('edtNotes').value
+
+                            printJS({
+                                printable: 'Print-Report', type: 'html', onPrintDialogClose: function () {
+                                    confirmshow2btn('Pemesanan Berhasil. Nomor invoice anda "' + response.invoice + '" Lanjutkan ke proses pembayaran ?',
+                                    function(){
+                                        location.href = '/inputpayment?invoice=' + response.invoice;
+                                    },function(){
+                                        location.reload();
+                                    });
+                                }
+                            });
+                    }
+                </script>
+</body>
+
+</html>

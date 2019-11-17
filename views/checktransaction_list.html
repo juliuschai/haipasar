@@ -1,0 +1,138 @@
+<% if(dataDocument.length>0){ %>
+<% if(dataDocument[0].StatusPayment=='notyet'){ %>
+<div class="alert alert-danger" role="alert" style="margin-top: 15px;">
+  Pembayaran belum dibuat, silahkan lunasi pemesanan <a
+    href="/inputpayment?invoice=<%=dataDocument[0].DocNumber%>">klik disini</a>
+</div>
+<% } %>
+
+
+<div class="row">
+  <div class="col-md-6">
+    <div id="divinfo" class="card mb-4 shadow">
+      <div class="card-body">
+        <h5 style="">Detail Pesanan</h5>
+        <hr>
+        <div class="griddata">
+            <div class="row rowdata mb-2">
+                <div class="col-sm-4">Tanggal Invoice</div>
+                <div class="col-sm-8"><b><%=dataDocument[0].TimeCreated1%></b></div>
+            </div>
+            <div class="row rowdata  mb-2">
+                <div class="col-sm-4">Nomor Invoice</div>
+                <div class="col-sm-8"><b>#<%=dataDocument[0].DocNumber%></b></div>
+            </div>
+            <div class="row rowdata  mb-2">
+                <div class="col-sm-4">Nama Penerima</div>
+                <div class="col-sm-8"><b><%=dataDocument[0].ShippingRecipient%></b></div>
+            </div>
+            <div class="row rowdata  mb-2">
+                <div class="col-sm-4">Email</div>
+                <div class="col-sm-8"><b><%=dataDocument[0].ShippingEmail%></b></div>
+            </div>
+            <div class="row rowdata  mb-2">
+                <div class="col-sm-4">Nomor HP</div>
+                <div class="col-sm-8"><b><%=dataDocument[0].ShippingPhone%></b></div>
+            </div>
+            <div class="row rowdata  mb-2">
+                <div class="col-sm-4">Kota</div>
+                <div class="col-sm-8"><b><%=dataDocument[0].ShippingCity%></b></div>
+            </div>
+            <div class="row rowdata  mb-2">
+                <div class="col-sm-4">Alamat</div>
+                <div class="col-sm-8"><b><%=dataDocument[0].ShippingAddress%></b></div>
+            </div>
+            <div class="row rowdata  mb-2">
+                <div class="col-sm-4">Kode Pos</div>
+                <div class="col-sm-8"><b><%=dataDocument[0].ShippingCodePos%></b></div>
+            </div>
+            <div class="row rowdata  mb-2">
+                <div class="col-sm-4">Total Biaya</div>
+                <div class="col-sm-8"><b>Rp. <%=dataDocument[0].GrandTotal%></b></div>
+            </div>
+            <div class="row rowdata  mb-2">
+                <div class="col-sm-4">Status Tranasksi</div>
+                <div class="col-sm-8">
+                   <b> <% if(dataDocument[0].Status=='open'){%> Belum dikonfirmasi
+                    <% } else if(dataDocument[0].Status=='processed'){ %> Sedang diproses
+                    <% } else if(dataDocument[0].Status=='awaiting'){ %> Menunggu konfirmasi
+                    <% } else if(dataDocument[0].Status=='complete'){ %> Berhasil
+                    <% } else if(dataDocument[0].Status=='canceled'){ %> Dibatalkan
+                    <% }; %></b>
+                </div>
+            </div>
+            <div class="row rowdata  mb-2">
+                <div class="col-sm-4">Status Pembayaran</div>
+                <div class="col-sm-8">
+                   <b> <% if(dataDocument[0].StatusPayment=='notyet'){%> Belum melakukan
+                    <% } else if(dataDocument[0].StatusPayment=='waiting'){ %> Menunggu konfirmasi
+                    <% } else if(dataDocument[0].StatusPayment=='success'){ %> Berhasil
+                    <% } else if(dataDocument[0].StatusPayment=='reject'){ %> Ditolak
+                    <% }; %></b>
+                </div>
+            </div>
+            <hr>
+            <textarea rows="5" class="form-control" id="edtNotes" placeholder="Catatan Pemesanan"
+                readonly><%=dataDocument[0].Notes%></textarea>
+        </div>
+        <hr>
+      </div>
+    </div>
+
+    <div class="card mb-4 shadow">
+      <div class="card-body">
+        <h5>Histori</h5>
+        <hr>
+        <% if(dataHistory.length==0){ %>
+        <div class="alert alert-primary">Tidak ada data</div>
+        <% }else{ %>
+        <% for(let i = 0;i < dataHistory.length;i++) {  %>
+        <div class="row rowdata">
+          <div class="col-sm-4"><%=dataHistory[i].TimeCreated1%></div>
+          <div class="col-sm-8"><b><%=dataHistory[i].Notes%></b></div>
+        </div>
+        <hr>
+        <% }%>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div id="divpengiriman" class="card mb-4 shadow">
+      <div class="card-body">
+        <h5 style="">Daftar Barang Pesanan</h5>
+        <hr>
+        <div class="griddata">
+          <%  if (dataTransDetail.length==0) { %>
+          <div class="alert alert-primary" role="alert" style="margin-top: 15px;">
+            Tidak ada barang pesanan
+          </div>
+          <div class="hrdivider"></div>
+          <% } else { %>
+          <% for(let i = 0;i < dataTransDetail.length;i++) {  %>
+          <div class="griditem">
+            <img src="<%=dataTransDetail[i].ImageUrl%>" alt="" style="width:80px;margin-right: 15px;">
+            <div style="width: 100%;">
+              <b><%=dataTransDetail[i].NameProduct%></b>
+              <div style="font-size: 12px;">Harga Rp. <%=dataTransDetail[i].Price%></div>
+              <div style="font-size: 12px;">Jumlah
+                <%=dataTransDetail[i].Qty%>/<%=dataTransDetail[i].Unit%></div>
+              <div><b>Total Rp. <%=dataTransDetail[i].Total%></b></div>
+            </div>
+          </div>
+          <hr>
+          <% } %>
+          <% } %>
+          <b style="margin-top: 15px;font-size: 1.2rem;">Total Pemesanan : Rp.
+            <%=total%></b>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% }else{ %>
+<div class="alert alert-danger" role="alert" style="margin-top: 15px;">
+  Data pesanan tidak ditemukan
+</div>
+<% } %>

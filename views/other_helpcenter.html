@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Icon Material Design -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <title>Hai Pasar</title>
+    <style>
+        .labelcustom1 {
+            color: rgb(212, 212, 212);
+            margin-left: 10px;
+            margin-right: 10px;
+            font-size: 12px
+        }
+
+        .labelcustom1:hover {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+
+    <script>
+        function ImageError(ctx) { ctx.src = 'https://firebasestorage.googleapis.com/v0/b/myproject-7ff5a.appspot.com/o/not%20found.png?alt=media&token=4afde5af-3512-48a5-ae51-5f2cd39aae0c' }
+    </script>
+</head>
+
+<body>
+    <%- include('_sidebar_main.html'); -%>
+    <div id="bodymain">
+        <div  data-aos="fade-up" class="container">
+            <h4 style="text-align: center;margin-top: 20px;">Pusat Bantuan</h4>
+            <hr>
+            <p style="text-align: center;">
+                <b>Whatsapp +62-82264576766</b> <br>
+                <b>Facebook @haipasar</b> <br>
+                <b>Twitter @haipasar123</b>
+                <br>
+                <br>
+                <Button class="btn btn-success">
+                    <div style="display: flex;justify-content: center;align-items: center;"
+                        onclick="location.href = 'https://wa.me/6282264576766'">
+                        <img src="/whatsapp.png" style="margin-right: 10px;">Whatsapp
+                    </div>
+                </Button>
+            </p>
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--must declar before popperjs-->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="/modul.js"></script>
+    <script>
+
+        AOS.init({ once: true });
+    </script>
+</body>
+
+</html>

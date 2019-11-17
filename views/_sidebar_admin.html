@@ -1,0 +1,119 @@
+<style>
+  .sidebar {
+    position: fixed;
+    left: 0;
+    width: 0px;
+    height: 100%;
+    transition: width 0.3s;
+    background-color: white;
+    height: 100%;
+    overflow: auto;
+  }
+
+  .siebarbg {
+    z-index: 3000;
+  }
+
+  .sidebarenter {
+    width: 250px;
+  }
+</style>
+<div>
+  <!-- Modal Dialog-->
+  <div class="modal fade" id="DialogAlert" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <br>
+          <div id="DialogAlertContent"></div>
+          <hr>
+          <div style="text-align: right;">
+              <button id="DialogAlertButton" type="button" class="btn btn-success" data-dismiss="modal">Oke</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="DialogConfirm" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div id="DialogConfirmContent" style="margin-top: 10px;"></div>
+          <hr>
+          <div style="text-align: right;">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+              <button id="DialogConfirmBtnYes" type="button" class="btn btn-success" data-dismiss="modal">Ya</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <button class="navbar-toggler mr-2" type="button" onclick="OpenSidebar();" style="display: block;">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="/admin"><b>Dashboard</b></a>
+    <ul class="navbar-nav mr-auto"></ul>
+  </nav>
+
+  <!-- navigation drawer -->
+  <div style="position: absolute;height: 100%;top: 0;">
+    <div id="siebarbg" class="siebarbg"
+      style="display: block;width: 100%;height: 100%; background-color: rgba(57, 57, 58, 0.171);position: fixed;"
+      onclick="OpenSidebar();">
+      <div id="sidebar" class="sidebar">
+        <div style="width: inherit;">
+          <nav class="navbar navbar-dark bg-success">
+            <a class="navbar-brand" href="#"><b>Menu</b></a>
+          </nav>
+          <div class="list-group" style="min-width: 250px;border-radius: 0px;">
+            <a href="#" class="list-group-item list-group-item-action"
+              style="border-radius: 0;"><b>Transaksi</b></a>
+            <a href="#" class="list-group-item list-group-item-action"
+              onclick="location.href='/admin?mode=information'">Informasi</a>
+            <a href="#" class="list-group-item list-group-item-action"
+              onclick="location.href='/admin?mode=transaction'">Pemesanan</a>
+            <a href="#" class="list-group-item list-group-item-action"
+              style="border-radius: 0;"><b>Operasional</b></a>
+            <a href="#" class="list-group-item list-group-item-action"
+              onclick="location.href='/admin?mode=product'">Produk</a>
+            <a href="#" class="list-group-item list-group-item-action"
+              onclick="location.href='/admin?mode=category'">Kategori</a>
+            <a href="#" class="list-group-item list-group-item-action"
+              onclick="location.href='/admin?mode=banner'">Banner</a>
+              <a href="#" class="list-group-item list-group-item-action"
+                onclick="location.href='/admin?mode=filesmanager'">Files Manager</a>
+            <a href="#" class="list-group-item list-group-item-action list-group-item-danger"
+              onclick="location.href='/adminlogout';">Logout</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var flagstatussidebar = false;
+  // window.location.href = '#'
+  document.getElementById('siebarbg').style.display = 'none';
+
+  function OpenSidebar() {
+    if (flagstatussidebar) {
+      document.getElementById("sidebar").classList.remove("sidebarenter");
+      flagstatussidebar = false;
+      setTimeout(function () {
+        document.getElementById('siebarbg').style.display = 'none';
+      }, 200);
+
+    } else {
+      document.getElementById('siebarbg').style.display = 'block';
+      setTimeout(function () {
+        document.getElementById("sidebar").classList.add("sidebarenter");
+        flagstatussidebar = true;
+      }, 100);
+    }
+  }
+</script>

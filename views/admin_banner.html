@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head></head>
+
+<body>
+    <div class="container mt-3">
+        <h4>Master Banner</h4>
+
+        <div id="browsedata" class="tabadminproduct">
+
+            <div class="card">
+                <div class="bg-success"
+                    style="padding: 10px;display: flex;justify-content: space-between;align-items: center;">
+                    <b style="color: white">Banner</b>
+                    <button class="btn btn-dark btn-sm" onclick="AddData();">Tambah</button>
+                </div>
+
+                <div style="overflow: auto;">
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nama Banner</th>
+                                <!-- <th>Content</th> -->
+                                <!-- <th>Image</th> -->
+                                <th style="min-width: 100px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% 
+                                    var ctindex = ctdata*10-9;
+                                    for(let i = 0;i < dataBanner.length;i++) {  %>
+                            <tr>
+                                <th><%=ctindex%></th>
+                                <td><%=dataBanner[i].Caption%></td>
+                                <!-- <td><%=dataBanner[i].Content%></td> -->
+                                <!-- <td><%=dataBanner[i].ImageUrl%></td> -->
+                                <td style="text-align: right;">
+                                    <% if(dataBanner[i].isShow==0){%><i class="material-icons" style="font-size: 14px;">visibility</i><%}else{%><i class="material-icons" style="font-size: 14px;">visibility_off</i><%} %>
+                                    <button class="btn btn-secondary btn-sm ml-2"
+                                        onclick="EditData('<%=JSON.stringify(dataBanner[i])%>')"><i
+                                            class="material-icons"
+                                            style="font-size: 14px;text-align: center;">edit</i></button>
+                                    <button class="btn btn-success btn-sm"
+                                        onclick="DeleteData('<%=dataBanner[i].ID%>');"><i class="material-icons"
+                                            style="font-size: 14px;text-align: center;">delete</i></button>
+                                </td>
+                            </tr>
+                            <% ctindex++; } %>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-outline-success btn-sm <% if(ctdata==1){ %>btn-hide<% } %>"
+                    onclick="PrevData();">Previous</button>
+                <button class="btn btn-outline-success btn-sm <% if(dataBanner.length<10){ %>btn-hide<% } %>"
+                    onclick="NextData();">Next</button>
+            </div>
+
+
+        </div>
+        <div class="tabadminproduct" id="inputingdata">
+            <div class="card">
+                <div class="bg-success" style="padding: 10px;">
+                    <div style="min-height: 31px;display: flex;align-items: center;">
+                        <b style="color: white;">Banner</b>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" id="edtMode">
+                    <input type="hidden" id="edtIDData">
+                    <div class="row" style="margin-bottom: 15px;">
+                        <label class=" col-md-2">Nama Banner</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control " id="edtJudul" placeholder="Nama">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 15px;display: none;">
+                        <label for="" class=" col-md-2">Content</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control " id="edtContent" placeholder="Headline">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 15px;">
+                        <label for="" class=" col-md-2">Gambar</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control " id="edtUrlImage" placeholder="Url image">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 15px;">
+                        <label for="" class=" col-md-2">Tampilkan</label>
+                        <div class="col-md-10">
+                            <input type="checkbox" class="" id="edtStatus">
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <button class="btn btn-secondary mr-1" onclick="SwhtichTab('browsedata');">Batalkan</button>
+                        <button class="btn btn-success" onclick="SaveData();">Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        var ctdata = '<%-ctdata%>';
+
+        SwhtichTab('browsedata');
+        function SwhtichTab(smode) {
+            var stab = document.querySelectorAll(".tabadminproduct");
+            for (var index = 0; index < stab.length; index++) {
+                if (stab[index].id == smode) {
+                    stab[index].style.display = 'block';
+                } else {
+                    stab[index].style.display = 'none';
+                }
+            }
+        }
+
+        function AddData() {
+            document.getElementById('edtMode').value = 'add';
+            document.getElementById('edtIDData').value = '0';
+            document.getElementById('edtJudul').value = '';
+            document.getElementById('edtContent').value = '';
+            document.getElementById('edtUrlImage').value = '';
+            document.getElementById('edtStatus').checked = false;
+            SwhtichTab('inputingdata');
+        }
+
+        function EditData(sdata) {
+            var sdataObj = JSON.parse(sdata);
+            document.getElementById('edtMode').value = 'edit';
+            document.getElementById('edtIDData').value = sdataObj.ID;
+            document.getElementById('edtJudul').value = sdataObj.Caption;
+            document.getElementById('edtContent').value = sdataObj.Content;
+            document.getElementById('edtUrlImage').value = sdataObj.ImageUrl;
+            if (sdataObj.isShow == 0) {
+                document.getElementById('edtStatus').checked = true;
+            } else {
+                document.getElementById('edtStatus').checked = false
+            }
+            SwhtichTab('inputingdata');
+        }
+
+        function SaveData() {
+            var sshow = '0';
+            if (document.getElementById('edtStatus').checked == false)
+                sshow = '1';
+            var dataTmp = {
+                "mode": document.getElementById('edtMode').value,
+                "iddata": document.getElementById('edtIDData').value,
+                "judul": document.getElementById('edtJudul').value,
+                "content": document.getElementById('edtContent').value,
+                "urlimage": document.getElementById('edtUrlImage').value,
+                "isshow": sshow,
+            }
+            $.ajax({
+                type: "get",
+                url: "/bannersave",
+                data: dataTmp,
+                success: function (response) {
+                    if (response == 'true') {
+                        location.reload();
+                    } else {
+                        alertshow(response,null);
+                    }
+                }
+            });
+        }
+
+        function DeleteData(iddata) {
+            confirmshow('Hapus Item ?',function(){
+                $.ajax({
+                    type: "get",
+                    url: "/bannerdelete/" + iddata,
+                    data: "",
+                    success: function (response) {
+                        if (response == 'true') {
+                            location.reload();
+                        } else {
+                            alertshow('Data invalid',function(){
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+        }
+
+        function NextData() {
+            ctdata = parseInt(ctdata) + 1;
+            $("#maincontent").load("/adminbanner?ctdata=" + ctdata);
+        }
+
+        function PrevData() {
+            if (ctdata != 1) {
+                ctdata = parseInt(ctdata) - 1;
+                $("#maincontent").load("/adminbanner?ctdata=" + ctdata);
+            }
+        }
+
+    </script>
+</body>
+
+</html>
